@@ -1,0 +1,31 @@
+[package]
+name = "iwc"
+version = "0.3.3"
+edition = "2021"
+description = "Rust Wayland compositor with Lua-configured tiling and an infinite floating canvas"
+license = "GPL-3.0-only"
+build = "build.rs"
+
+[[bin]]
+name = "iwc"
+path = "src/main.rs"
+
+[features]
+default = ["xwayland"]
+xwayland = []
+
+[dependencies]
+libc = "0.2"
+mlua = { version = "0.12.2", features = ["lua54"] }
+
+[build-dependencies]
+bindgen = "0.72"
+pkg-config = "0.3"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+panic = "abort"
+
+[profile.dev]
+panic = "abort"
