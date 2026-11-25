@@ -21,7 +21,6 @@ pub const TOUCHPAD_MOVE_GAIN: f64 = 2.5;
 pub const TOUCHPAD_RESIZE_GAIN: f64 = 3.0;
 pub const PINCH_IN_THRESHOLD: f64 = 0.85;
 pub const PINCH_OUT_THRESHOLD: f64 = 1.15;
-pub const SNAP: i32 = 32; // snap pixel
 pub const ROOTCOLOR: [f32; 4] = color(0x000000ff);
 pub const BORDERCOLOR: [f32; 4] = color(0x444444ff);
 pub const FOCUSCOLOR: [f32; 4] = color(0xaaaaaaff);

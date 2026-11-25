@@ -22,6 +22,8 @@ Regressions cover stale scheduled XDG sizes, hover after rapid mode toggles,
 instant scene/camera updates, pointer tracking/cancellation at 50% and 200% zoom
 for all four resize corners, and mouse resize tracking at minimum size.
 New clients are checked against the panned camera at 50%, 100% and 200% zoom.
+Mouse drags near and past all four viewport edges must not snap at those scales,
+and the grabbed point must remain under the cursor.
 Pan tests check pointer focus protection, swipe cancellation, finger-axis stop
 and releasing Alt without axis_stop; a screencopy includes the grabbing cursor.
 Test implementations live in `src/infinity.rs`, `src/desktop.rs`, `src/lua_config.rs`

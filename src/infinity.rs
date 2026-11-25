@@ -879,6 +879,48 @@ mod tests {
                 g!().cursor_mode = CursorMode::Normal;
                 resize(third, geometry, true);
             }
+            let geometry_before_edges = (*third).geom;
+            resize(third, wlr_box(geometry_before_edges.x, geometry_before_edges.y, 320, 240), true);
+            pump();
+            for target in [0.5, 1.0, 2.0] {
+                zoom_to(target, Point { x: middle.0 as f64, y: middle.1 as f64 });
+                center(third);
+                pump();
+                let geometry = (*third).geom;
+                let viewport = (*g!().selmon).w;
+                let top_left = world(third, viewport.x as f64, viewport.y as f64);
+                let bottom_right = world(third, (viewport.x + viewport.width) as f64,
+                    (viewport.y + viewport.height) as f64);
+                for offset in [-8, 8] {
+                    for (expected_x, expected_y) in [
+                        (top_left.x.round() as i32 + offset, geometry.y),
+                        (bottom_right.x.round() as i32 - geometry.width + offset, geometry.y),
+                        (geometry.x, top_left.y.round() as i32 + offset),
+                        (geometry.x, bottom_right.y.round() as i32 - geometry.height + offset),
+                    ] {
+                        resize(third, geometry, true);
+                        let pointer = screen(third, (geometry.x + geometry.width / 2) as f64,
+                            (geometry.y + geometry.height / 2) as f64);
+                        wlr_cursor_warp(g!().cursor, null_mut(), pointer.x, pointer.y);
+                        moveresize(CursorMode::Move);
+                        assert_eq!(g!().grabc, third);
+                        let destination = screen(third, (expected_x + g!().grabcx) as f64,
+                            (expected_y + g!().grabcy) as f64);
+                        let dx = destination.x - (*g!().cursor).x;
+                        let dy = destination.y - (*g!().cursor).y;
+                        motionnotify(1210, null_mut(), dx, dy, dx, dy);
+                        assert_eq!(((*third).geom.x, (*third).geom.y), (expected_x, expected_y),
+                            "dragging near or past any screen edge must not snap at scale {target}");
+                        let pointer = screen(third, ((*third).geom.x + g!().grabcx) as f64,
+                            ((*third).geom.y + g!().grabcy) as f64);
+                        assert_eq!(((*g!().cursor).x, (*g!().cursor).y), (pointer.x, pointer.y));
+                        g!().grabc = null_mut();
+                        g!().cursor_mode = CursorMode::Normal;
+                    }
+                }
+                resize(third, geometry, true);
+            }
+            resize(third, geometry_before_edges, true);
             zoom_to(
                 0.5,
                 Point {

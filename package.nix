@@ -4,7 +4,7 @@
 
 rustPlatform.buildRustPackage {
   pname = "iwc";
-  version = "0.3.3";
+  version = "0.3.4";
   src = lib.cleanSourceWith {
     src = ./.;
     filter = path: type: !(builtins.elem (baseNameOf path) [ "target" ".git" "result" ]);

@@ -1752,29 +1752,9 @@ pub unsafe fn motionnotify(
         CursorMode::Move if !grabc.is_null() => {
             /* Move the grabbed client to the new position. */
             let point = crate::infinity::world(grabc, (*cursor).x, (*cursor).y);
-            let mut nx = point.x.round() as i32 - g!().grabcx;
-            let mut ny = point.y.round() as i32 - g!().grabcy;
+            let nx = point.x.round() as i32 - g!().grabcx;
+            let ny = point.y.round() as i32 - g!().grabcy;
             let gw = (*grabc).geom;
-            let selmon = g!().selmon;
-            if !selmon.is_null() {
-                let mut w = (*selmon).w;
-                let position = crate::infinity::world(grabc, w.x as f64, w.y as f64);
-                let scale = crate::infinity::scale(grabc);
-                w.x = position.x.round() as i32;
-                w.y = position.y.round() as i32;
-                w.width = (w.width as f64 / scale).round() as i32;
-                w.height = (w.height as f64 / scale).round() as i32;
-                if (w.x - nx).abs() < SNAP {
-                    nx = w.x;
-                } else if ((w.x + w.width) - (nx + gw.width)).abs() < SNAP {
-                    nx = w.x + w.width - gw.width;
-                }
-                if (w.y - ny).abs() < SNAP {
-                    ny = w.y;
-                } else if ((w.y + w.height) - (ny + gw.height)).abs() < SNAP {
-                    ny = w.y + w.height - gw.height;
-                }
-            }
             resize(grabc, wlr_box(nx, ny, gw.width, gw.height), true);
             let point = crate::infinity::screen(grabc, ((*grabc).geom.x + g!().grabcx) as f64, ((*grabc).geom.y + g!().grabcy) as f64);
             wlr_cursor_warp_closest(cursor, null_mut(), point.x, point.y);

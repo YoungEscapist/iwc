@@ -1,6 +1,6 @@
 [package]
 name = "iwc"
-version = "0.3.3"
+version = "0.3.4"
 edition = "2021"
 description = "Rust Wayland compositor with Lua-configured tiling and an infinite floating canvas"
 license = "GPL-3.0-only"
